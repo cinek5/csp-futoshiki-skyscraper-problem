@@ -61,10 +61,7 @@ public class FutoshikiProblem {
     public void unsetValue(int row, int col, int val)
     {
         representation[row][col] = 0;
-        if(val!=0)
-        {
-            removeValue(row,col,val);
-        }
+        removeValue(row,col,val);
     }
 
     public void addValue(int row, int col, int val)
@@ -99,7 +96,7 @@ public class FutoshikiProblem {
 
     public boolean isValid(int r, int c, int val)
     {
-        return checkUniqueInRowOrColConstraint(r,c,val) && checkLessThanConstraints();
+        return checkUniqueInRowOrColConstraint(r,c,val) && checkLessThanConstraints(r, c, val);
     }
 
 
@@ -113,7 +110,7 @@ public class FutoshikiProblem {
         return !row.contains(val) && !col.contains(val);
 
     }
-    private boolean checkLessThanConstraints()
+    private boolean checkLessThanConstraints(int r, int c, int val)
     {
         for (FutoshikiLessThanConstraint constraint : lessThanConstraints)
         {
@@ -122,6 +119,14 @@ public class FutoshikiProblem {
 
             int lsr = representation[lesser.row][lesser.col];
             int grt = representation[greater.row][greater.col];
+            if (lesser.row == r && lesser.col==c)
+            {
+                lsr = val;
+            }
+            if (greater.row == r && greater.col == c)
+            {
+                grt = val;
+            }
 
             if (lsr != 0 && grt!=0  && lsr>=grt)
             {
