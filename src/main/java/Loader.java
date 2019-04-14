@@ -48,7 +48,11 @@ public class Loader {
         List<FutoshikiLessThanConstraint> constraintList = new ArrayList<>();
         while(reader.hasNextLine())
         {
-            String[] constraints = reader.nextLine().split(";");
+            String[] constraints = reader.nextLine().trim().split(";");
+            if (constraints.length<2)
+            {
+                break;
+            }
             String lesser = constraints[0];
             String greater =constraints[1];
             Character lesserRowLetter = lesser.charAt(0);

@@ -4,8 +4,9 @@
 public class Backtracking {
 
     private int numOfSolutions = 0;
+    private NextVariableSelectionStrategy nextVariableSelectionStrategy;
 
-    public void solve(FutoshikiProblem problem) {
+    public void solve(Problem problem) {
         if (problem.getRepresentation()[0][0] != 0) {
             Pair next = selectNextVariable(problem, 0, 0);
             solve(problem, next.row, next.col);
@@ -15,7 +16,7 @@ public class Backtracking {
 
     }
 
-    public void solve(FutoshikiProblem problem, int row, int col) {
+    public void solve(Problem problem, int row, int col) {
         for (int val = 1; val <= problem.getN(); val++) {
             if (problem.isValid(row, col, val)) {
                 problem.setValue(row, col, val);
@@ -23,7 +24,7 @@ public class Backtracking {
                 Pair nextVariable = selectNextVariable(problem, row, col);
                 if (nextVariable.row != -1 && nextVariable.col != -1) {
                     solve(problem, nextVariable.row, nextVariable.col);
-                    if (allAssigned(problem))
+                    if (problem.allAssigned())
                     {
                         printArray(problem.getRepresentation());
                         System.out.println("\n");
@@ -35,19 +36,9 @@ public class Backtracking {
 
         }
     }
-    private boolean allAssigned(FutoshikiProblem problem)
-    {
-        for (int row=0; row<problem.getN(); row++)
-            for(int col=0; col<problem.getN(); col++)
-            {
-                if (problem.getRepresentation()[row][col]==0)
-                    return false;
-            }
-        return  true;
-    }
 
 
-    private void backtrack(FutoshikiProblem problem, int row, int col, int val) {
+    private void backtrack(Problem problem, int row, int col, int val) {
         problem.unsetValue(row, col, val);
     }
 
@@ -68,7 +59,7 @@ public class Backtracking {
         }
     }
 
-    public Pair selectNextVariable(FutoshikiProblem problem, int row, int col) {
+    public Pair selectNextVariable(Problem problem, int row, int col) {
         int nextcol = -1;
         int nextrow = -1;
         if (col + 1 >= problem.getN()) {

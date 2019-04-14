@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Created by Cinek on 09.04.2019.
  */
-public class FutoshikiProblem {
+public class FutoshikiProblem  implements Problem{
     private int[][] representation;
     private int n;
 
@@ -62,6 +62,17 @@ public class FutoshikiProblem {
     {
         representation[row][col] = 0;
         removeValue(row,col,val);
+    }
+
+    @Override
+    public boolean allAssigned() {
+        for (int row=0; row<n; row++)
+            for(int col=0; col<n; col++)
+            {
+                if (representation[row][col]==0)
+                    return false;
+            }
+        return  true;
     }
 
     public void addValue(int row, int col, int val)
