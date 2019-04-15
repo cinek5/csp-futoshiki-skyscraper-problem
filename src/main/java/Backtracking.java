@@ -1,14 +1,14 @@
 /**
  * Created by Cinek on 09.04.2019.
  */
-public class Backtracking {
+public class Backtracking implements Solver {
 
-    private int numOfSolutions = 0;
-    private NextVariableSelectionStrategy nextVariableSelectionStrategy;
+    private int numOfBacktracks = 0;
+    private NextVariableSelectionStrategy nextVariableSelectionStrategy = new  IterativeNextVariableSelectionStrategy();
 
     public void solve(Problem problem) {
         if (problem.getRepresentation()[0][0] != 0) {
-            Pair next = selectNextVariable(problem, 0, 0);
+            Pair next = nextVariableSelectionStrategy.selectNextVariable(problem, 0, 0);
             solve(problem, next.row, next.col);
         } else {
             solve(problem, 0, 0);
@@ -21,7 +21,7 @@ public class Backtracking {
             if (problem.isValid(row, col, val)) {
                 problem.setValue(row, col, val);
 
-                Pair nextVariable = selectNextVariable(problem, row, col);
+                Pair nextVariable = nextVariableSelectionStrategy.selectNextVariable(problem, row, col);
                 if (nextVariable.row != -1 && nextVariable.col != -1) {
                     solve(problem, nextVariable.row, nextVariable.col);
                     if (problem.allAssigned())
@@ -29,6 +29,7 @@ public class Backtracking {
                         printArray(problem.getRepresentation());
                         System.out.println("\n");
                     }
+                    numOfBacktracks++;
                     backtrack(problem, row, col, val);
                 }
 
@@ -37,18 +38,23 @@ public class Backtracking {
         }
     }
 
+    public int getNumOfBacktracks()
+    {
+        return numOfBacktracks;
+    }
+
 
     private void backtrack(Problem problem, int row, int col, int val) {
         problem.unsetValue(row, col, val);
     }
 
-    private void backtrackIfPossible(FutoshikiProblem problem, int row, int col, int val) {
-        Pair nextVariable = selectNextVariable(problem, row, col);
-        if (nextVariable.row != -1 && nextVariable.col != -1) {
-            System.out.println("nawrot");
-            problem.unsetValue(row, col, val);
-        }
-    }
+//    private void backtrackIfPossible(FutoshikiProblem problem, int row, int col, int val) {
+//        Pair nextVariable = nextVariableSelectionStrategy.selectNextVariable(problem, row, col);
+//        if (nextVariable.row != -1 && nextVariable.col != -1) {
+//            System.out.println("nawrot");
+//            problem.unsetValue(row, col, val);
+//        }
+//    }
 
     private void printArray(int[][] arr) {
         for (int row = 0; row < arr.length; row++) {
@@ -59,25 +65,5 @@ public class Backtracking {
         }
     }
 
-    public Pair selectNextVariable(Problem problem, int row, int col) {
-        int nextcol = -1;
-        int nextrow = -1;
-        if (col + 1 >= problem.getN()) {
-            if (row + 1 >= problem.getN()) {
-                nextrow = -1;
-                nextcol = -1;
-            } else {
-                nextrow = row + 1;
-                nextcol = 0;
-            }
-        } else {
-            nextcol = col + 1;
-            nextrow = row;
-        }
 
-        if (nextrow != -1 && nextcol != -1 && problem.getRepresentation()[nextrow][nextcol] != 0) {
-            return selectNextVariable(problem, nextrow, nextcol);
-        }
-        return new Pair(nextrow, nextcol);
-    }
 }

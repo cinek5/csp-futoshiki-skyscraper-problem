@@ -87,5 +87,71 @@ public class Loader {
         }
     }
 
+    public SkyscraperProblem loadSkyscraperProblem(String path) throws FileNotFoundException
+    {
+
+        File file = new File(path);
+        Scanner reader = new Scanner(file);
+
+        int n = Integer.parseInt(reader.nextLine());
+        int[][] representation = new int[n][n];
+
+        for (int i=0; i<representation.length; i++)
+            for (int j=0; j<representation.length; j++)
+                representation[i][j]=0;
+
+
+
+        Map<Integer, ColConstraint> colConstraintMap = new HashMap<>();
+        Map<Integer, RowConstraint> rowConstraintMap = new HashMap<>();
+
+        for(int i=0; i<2;i++)
+        {
+            String row = reader.nextLine();
+            String[] rows = row.split(";");
+            for (int j=1; j<=n; j++)
+            {
+                int val = Integer.parseInt(rows[j]);
+
+                if (colConstraintMap.containsKey(j-1))
+                {
+                    colConstraintMap.get(j-1).bottom = val;
+                }
+                else
+                {
+                    ColConstraint colConstraint = new ColConstraint();
+                    colConstraint.top = val;
+                    colConstraintMap.put(j-1, colConstraint);
+                }
+
+            }
+        }
+
+        for(int i=0; i<2;i++)
+        {
+            String row = reader.nextLine();
+            String[] rows = row.split(";");
+            for (int j=1; j<=n; j++)
+            {
+                int val = Integer.parseInt(rows[j]);
+
+                if (rowConstraintMap.containsKey(j-1))
+                {
+                    rowConstraintMap.get(j-1).right = val;
+                }
+                else
+                {
+                    RowConstraint rowConstraint = new RowConstraint();
+                    rowConstraint.left = val;
+                    rowConstraintMap.put(j-1, rowConstraint);
+                }
+
+            }
+        }
+
+        return new SkyscraperProblem(representation, n, rowConstraintMap
+        , colConstraintMap);
+    }
+
 
 }
