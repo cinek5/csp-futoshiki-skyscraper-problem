@@ -8,7 +8,7 @@ public class Backtracking implements Solver {
 
     public void solve(Problem problem) {
         if (problem.getRepresentation()[0][0] != 0) {
-            Pair next = nextVariableSelectionStrategy.selectNextVariable(problem, 0, 0);
+            Pair next = nextVariableSelectionStrategy.selectNextVariable(problem, 0, 0, null);
             solve(problem, next.row, next.col);
         } else {
             solve(problem, 0, 0);
@@ -21,17 +21,17 @@ public class Backtracking implements Solver {
             if (problem.isValid(row, col, val)) {
                 problem.setValue(row, col, val);
 
-                Pair nextVariable = nextVariableSelectionStrategy.selectNextVariable(problem, row, col);
+                Pair nextVariable = nextVariableSelectionStrategy.selectNextVariable(problem, row, col, null);
                 if (nextVariable.row != -1 && nextVariable.col != -1) {
                     solve(problem, nextVariable.row, nextVariable.col);
-                    if (problem.allAssigned())
-                    {
-                        printArray(problem.getRepresentation());
-                        System.out.println("\n");
-                    }
-                    numOfBacktracks++;
-                    backtrack(problem, row, col, val);
                 }
+                if (problem.allAssigned())
+                {
+                    printArray(problem.getRepresentation());
+                    System.out.println("\n");
+                }
+                numOfBacktracks++;
+                backtrack(problem, row, col, val);
 
             }
 

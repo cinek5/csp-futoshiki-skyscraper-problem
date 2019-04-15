@@ -47,6 +47,11 @@ public class SkyscraperProblem implements Problem {
         removeValue(row,col,value);
     }
 
+    @Override
+    public boolean hasValue(int row, int col) {
+        return representation[row][col]!=0;
+    }
+
     public void addValue(int row, int col, int val)
     {
         rows.get(row).add(val);

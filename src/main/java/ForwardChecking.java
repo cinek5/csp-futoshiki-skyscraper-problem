@@ -7,6 +7,7 @@ public class ForwardChecking implements Solver {
 
     private int numOfBacktracks=0;
     private NextVariableSelectionStrategy nextVariableSelectionStrategy = new  IterativeNextVariableSelectionStrategy();
+    //private NextVariableSelectionStrategy nextVariableSelectionStrategy = new LRVHeuristicsSelectionStrategy();
 
 
 
@@ -14,7 +15,7 @@ public class ForwardChecking implements Solver {
     public void solve(Problem problem) {
         Map<Cell, Set<Integer>> domains = initialDomains(problem.getN());
         if (problem.getRepresentation()[0][0] != 0) {
-            Pair next = nextVariableSelectionStrategy.selectNextVariable(problem, 0, 0);
+            Pair next = nextVariableSelectionStrategy.selectNextVariable(problem, 0, 0, domains);
             solve(problem, next.row, next.col, domains);
         } else {
             solve(problem, 0, 0, domains);
@@ -35,18 +36,21 @@ public class ForwardChecking implements Solver {
 
                 removeNotValidValues(copyRemainingValues, problem );
 
+                if (areSetsNotEmpty(problem,copyRemainingValues)) {
 
-                Pair nextVariable = nextVariableSelectionStrategy.selectNextVariable(problem, row, col);
-                if (nextVariable.row != -1 && nextVariable.col != -1) {
-                    solve(problem, nextVariable.row, nextVariable.col, copyRemainingValues);
-                    if (problem.allAssigned())
-                    {
-                        printArray(problem.getRepresentation());
-                        System.out.println("\n");
+
+                    Pair nextVariable = nextVariableSelectionStrategy.selectNextVariable(problem, row, col, copyRemainingValues);
+                    if (nextVariable.row != -1 && nextVariable.col != -1) {
+                        solve(problem, nextVariable.row, nextVariable.col, copyRemainingValues);
                     }
-                    numOfBacktracks++;
-                    backtrack(problem, row, col, val);
+
                 }
+                if (problem.allAssigned()) {
+                    printArray(problem.getRepresentation());
+                    System.out.println("\n");
+                }
+                numOfBacktracks++;
+                backtrack(problem, row, col, val);
 
             }
 
@@ -76,6 +80,22 @@ public class ForwardChecking implements Solver {
         }
 
     }
+
+    private boolean areSetsNotEmpty(Problem problem, Map<Cell, Set<Integer>> remainingValues)
+    {
+        for (Map.Entry<Cell, Set<Integer>> entry : remainingValues.entrySet())
+        {
+            Set<Integer> set = entry.getValue();
+            Cell cell  = entry.getKey();
+
+            if (set.isEmpty() && !problem.hasValue(cell.row, cell.col))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
 
     private void backtrack(Problem problem, int row, int col, int val) {
@@ -123,33 +143,7 @@ public class ForwardChecking implements Solver {
         return copy;
     }
 
-    private static class Cell
-    {
-        int row;
-        int col;
 
-        public Cell(int row, int col) {
-            this.row = row;
-            this.col = col;
-        }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof Cell)) return false;
-
-            Cell cell = (Cell) o;
-
-            if (row != cell.row) return false;
-            return col == cell.col;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = row;
-            result = 31 * result + col;
-            return result;
-        }
-    }
 
 }

@@ -65,6 +65,11 @@ public class FutoshikiProblem  implements Problem{
     }
 
     @Override
+    public boolean hasValue(int row, int col) {
+        return representation[row][col]!=0;
+    }
+
+    @Override
     public boolean allAssigned() {
         for (int row=0; row<n; row++)
             for(int col=0; col<n; col++)
