@@ -6,7 +6,8 @@ import java.util.*;
 public class CleanBacktracking extends Solver {
 
     private int numOfIterations = 0;
-    private NextVariableSelectionStrategy nextVariableSelectionStrategy = new  IterativeNextVariableSelectionStrategy();
+    //private NextVariableSelectionStrategy nextVariableSelectionStrategy = new MaximumConstraintsHeuristicsSelectionStrategy();
+    private NextVariableSelectionStrategy nextVariableSelectionStrategy = new IterativeNextVariableSelectionStrategy();
 
 
 

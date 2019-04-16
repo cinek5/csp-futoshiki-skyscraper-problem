@@ -85,6 +85,11 @@ public class SkyscraperProblem implements Problem {
         return n;
     }
 
+    @Override
+    public int getNumberOfConstraints(int row, int col) {
+        return 0;
+    }
+
     private boolean checkUniqueInRowOrColConstraint(int r, int c, int val)
     {
         Set<Integer> row = rows.get(r);

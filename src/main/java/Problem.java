@@ -9,5 +9,6 @@ public interface Problem {
     boolean allAssigned();
     int[][] getRepresentation();
     int getN();
+    int getNumberOfConstraints(int row, int col);
 
 }

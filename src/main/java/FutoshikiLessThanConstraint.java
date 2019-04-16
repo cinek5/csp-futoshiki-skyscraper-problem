@@ -25,4 +25,9 @@ public class FutoshikiLessThanConstraint {
     public void setGreater(Pair greater) {
         this.greater = greater;
     }
+
+    public boolean isConstrained(int row, int col)
+    {
+        return (lesser.row==row && lesser.col==col) || (greater.row == row && greater.col == col);
+    }
 }

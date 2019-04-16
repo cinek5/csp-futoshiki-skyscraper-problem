@@ -6,6 +6,7 @@ import java.util.*;
 public abstract class Solver {
    abstract void solve(Problem problem);
 
+
 //    protected Map<Cell, Set<Integer>> removeNotValidValues(Map<Cell, Set<Integer>> remainingValues, int row, int col, Problem problem) {
 //
 //        Map<Cell, Set<Integer>> whatWasRemoved  = new HashMap<>();

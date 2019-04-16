@@ -1,7 +1,6 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.Arrays.asList;
 
 /**
  * Created by Cinek on 09.04.2019.
@@ -15,14 +14,9 @@ public class FutoshikiProblem  implements Problem{
 
     List<FutoshikiLessThanConstraint> lessThanConstraints;
 
+    Map<Cell, Integer>  numOfConstraintsPerCell;
 
 
-    public FutoshikiProblem getCopy()
-    {
-        FutoshikiProblem futoshikiProblem = new FutoshikiProblem(n);
-
-        return futoshikiProblem;
-    }
 
     public int[][] getRepresentation() {
         return representation;
@@ -41,9 +35,24 @@ public class FutoshikiProblem  implements Problem{
         return n;
     }
 
+    @Override
+    public int getNumberOfConstraints(int row, int col) {
+        Cell cell = new Cell(row,col);
+        int valuesInRowAndCol = rows.get(row).size() + cols.get(col).size();
+        if (numOfConstraintsPerCell.containsKey(cell))
+        {
+            return (numOfConstraintsPerCell.get(cell)*20) + valuesInRowAndCol;
+        }
+        else
+        {
+            return valuesInRowAndCol;
+        }
+    }
+
     public void setLessThanConstraints(List<FutoshikiLessThanConstraint> lessThanConstraints)
     {
         this.lessThanConstraints = lessThanConstraints;
+        numOfConstraintsPerCell = getNumOfConstraintsPerCell();
     }
 
 
@@ -115,6 +124,34 @@ public class FutoshikiProblem  implements Problem{
         return checkUniqueInRowOrColConstraint(r,c,val) && checkLessThanConstraints(r, c, val);
     }
 
+    private Map<Cell ,Integer> getNumOfConstraintsPerCell()
+    {
+        Map<Cell, Integer> constraintsPerCell = new HashMap<>();
+        for (FutoshikiLessThanConstraint constraint: lessThanConstraints)
+        {
+            Pair greater =constraint.getGreater();
+            Pair lesser =constraint.getLesser();
+
+            Cell cell1 = new Cell(greater.row, greater.col);
+            Cell cell2 = new Cell(lesser.row, lesser.col);
+
+            for (Cell cell : asList(cell1,cell2))
+            {
+                if (constraintsPerCell.containsKey(cell))
+                {
+                   int numOfConstraints=  constraintsPerCell.get(cell);
+                   constraintsPerCell.remove(cell);
+                   constraintsPerCell.put(cell, numOfConstraints+1);
+                }
+                else {
+                    constraintsPerCell.put(cell, 1);
+                }
+
+            }
+
+        }
+        return constraintsPerCell;
+    }
 
 
 
