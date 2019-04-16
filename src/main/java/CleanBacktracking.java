@@ -3,11 +3,11 @@ import java.util.*;
 /**
  * Created by Cinek on 09.04.2019.
  */
-public class Backtracking implements Solver {
+public class CleanBacktracking implements Solver {
 
     private int numOfIterations = 0;
     private NextVariableSelectionStrategy nextVariableSelectionStrategy = new  IterativeNextVariableSelectionStrategy();
-    //private NextVariableSelectionStrategy nextVariableSelectionStrategy = new MRVHeuristicsSelectionStrategy();
+
 
 
     private Map<Cell, Set<Integer>> initialDomains(int n)
@@ -30,36 +30,23 @@ public class Backtracking implements Solver {
     }
 
     public void solve(Problem problem) {
-        Map<Cell, Set<Integer>> domains  = initialDomains(problem.getN());
-        if (nextVariableSelectionStrategy instanceof  IterativeNextVariableSelectionStrategy) {
-            if (problem.getRepresentation()[0][0] != 0) {
-                Pair next = nextVariableSelectionStrategy.selectNextVariable(problem, 0, 0, domains);
-                solve(problem, next.row, next.col, domains);
-            } else {
-                solve(problem, 0, 0, domains);
-            }
-        }
-        else
-        {
-            Pair next = nextVariableSelectionStrategy.selectNextVariable(problem,0,0,domains);
-            solve(problem, next.row, next.col, domains);
+        if (problem.getRepresentation()[0][0] != 0) {
+            Pair next = nextVariableSelectionStrategy.selectNextVariable(problem, 0, 0, null);
+            solve(problem, next.row, next.col);
+        } else {
+            solve(problem, 0, 0);
         }
 
     }
 
-    public void solve(Problem problem, int row, int col,Map<Cell, Set<Integer>> remainingVariables ) {
+    public void solve(Problem problem, int row, int col) {
         for (int val = 1; val <= problem.getN(); val++) {
             if (problem.isValid(row, col, val)) {
                 problem.setValue(row, col, val);
 
-                Map<Cell, Set<Integer>> copyRemainingVariables = copyMap(remainingVariables);
-
-                removeNotValidValues(copyRemainingVariables, row, col, problem);
-
-
-                Pair nextVariable = nextVariableSelectionStrategy.selectNextVariable(problem, row, col, copyRemainingVariables);
+                Pair nextVariable = nextVariableSelectionStrategy.selectNextVariable(problem, row, col, null);
                 if (nextVariable.row != -1 && nextVariable.col != -1) {
-                    solve(problem, nextVariable.row, nextVariable.col, remainingVariables);
+                    solve(problem, nextVariable.row, nextVariable.col);
                 }
                 if (problem.allAssigned())
                 {
@@ -83,19 +70,19 @@ public class Backtracking implements Solver {
         return numOfIterations;
     }
 
-    private void removeNotValidValues(Map<Cell, Set<Integer>> remainingValues, int row, int col, Problem problem) {
+    private void removeNotValidValues(Map<Cell, Set<Integer>> remainingValues, Problem problem) {
 
         for (Cell cell : remainingValues.keySet())
         {
-            if (cell.row == row || cell.col == col) {
-                Set<Integer> set = remainingValues.get(cell);
-                Iterator<Integer> iterator = set.iterator();
+            Set<Integer> set = remainingValues.get(cell);
+            Iterator<Integer> iterator = set.iterator();
 
-                while (iterator.hasNext()) {
-                    int value = iterator.next();
-                    if (!problem.isValid(cell.row, cell.col, value)) {
-                        iterator.remove();
-                    }
+            while(iterator.hasNext())
+            {
+                int value  = iterator.next();
+                if (!problem.isValid(cell.row, cell.col, value ))
+                {
+                    iterator.remove();
                 }
             }
         }
@@ -109,7 +96,6 @@ public class Backtracking implements Solver {
         {
             Set<Integer> sourceSet = source.get(cell);
             Set<Integer> copySet = new HashSet<>(sourceSet);
-
             copy.put(cell, copySet);
         }
 

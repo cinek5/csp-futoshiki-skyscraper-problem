@@ -5,9 +5,9 @@ import java.util.*;
  */
 public class ForwardChecking implements Solver {
 
-    private int numOfBacktracks=0;
+    private int numOfIterations = 0;
     private NextVariableSelectionStrategy nextVariableSelectionStrategy = new  IterativeNextVariableSelectionStrategy();
-    //private NextVariableSelectionStrategy nextVariableSelectionStrategy = new LRVHeuristicsSelectionStrategy();
+   // private NextVariableSelectionStrategy nextVariableSelectionStrategy = new MRVHeuristicsSelectionStrategy();
 
 
 
@@ -32,9 +32,9 @@ public class ForwardChecking implements Solver {
             if (problem.isValid(row, col, val)) {
                 problem.setValue(row, col, val);
 
-                Map<Cell,Set<Integer>> copyRemainingValues = copyMap(remainingValues);
+                Map<Cell,Set<Integer>> copyRemainingValues =copyMap(remainingValues);
 
-                removeNotValidValues(copyRemainingValues, problem );
+                removeNotValidValues(copyRemainingValues,row, col, problem );
 
                 if (areSetsNotEmpty(problem,copyRemainingValues)) {
 
@@ -49,32 +49,41 @@ public class ForwardChecking implements Solver {
                     printArray(problem.getRepresentation());
                     System.out.println("\n");
                 }
-                numOfBacktracks++;
+                numOfIterations++;
                 backtrack(problem, row, col, val);
 
+            }
+            else
+            {
+                numOfIterations++;
             }
 
         }
     }
 
-    public int getNumOfBacktracks()
+//    private int selectValue(Set<Integer> values, int row, int col)
+//    {
+//
+//    }
+
+    public int getNumOfIterations()
     {
-        return numOfBacktracks;
+        return numOfIterations;
     }
 
-    private void removeNotValidValues(Map<Cell, Set<Integer>> remainingValues, Problem problem) {
+    private void removeNotValidValues(Map<Cell, Set<Integer>> remainingValues, int row, int col, Problem problem) {
 
         for (Cell cell : remainingValues.keySet())
         {
-            Set<Integer> set = remainingValues.get(cell);
-            Iterator<Integer> iterator = set.iterator();
+            if (cell.row == row || cell.col == col) {
+                Set<Integer> set = remainingValues.get(cell);
+                Iterator<Integer> iterator = set.iterator();
 
-            while(iterator.hasNext())
-            {
-                int value  = iterator.next();
-                if (!problem.isValid(cell.row, cell.col, value ))
-                {
-                    iterator.remove();
+                while (iterator.hasNext()) {
+                    int value = iterator.next();
+                    if (!problem.isValid(cell.row, cell.col, value)) {
+                        iterator.remove();
+                    }
                 }
             }
         }
