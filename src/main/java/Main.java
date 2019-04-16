@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         Loader loader = new Loader();
-        String filename = "test_futo_6_1.txt";
+        String filename = "test_futo_7_1.txt";
         Problem problem = loader.loadFutoshikiProblemData("C:\\Users\\Cinek\\Documents\\projektyJAVA\\csp-futoshiki-skyscraper-problem\\src\\main\\resources\\"+filename);
         //Problem problem = loader.loadSkyscraperProblem("C:\\Users\\Cinek\\Documents\\projektyJAVA\\csp-futoshiki-skyscraper-problem\\src\\main\\resources\\"+filename);
 
@@ -24,16 +24,16 @@ public class Main {
 
 
 
-        System.out.println();
-        System.out.println();
-        System.out.println(" Backtracking:  ");
-        start = System.nanoTime();
-        Backtracking backtracking = new Backtracking();
-        backtracking.solve(problem);
-        end = System.nanoTime();
-
-        System.out.println("Czas wykonania: "+(end-start)/1000000000.0 + " s");
-        System.out.println("Liczba iteracji: "+backtracking.getNumOfIterations());
+//        System.out.println();
+//        System.out.println();
+//        System.out.println(" Backtracking:  ");
+//        start = System.nanoTime();
+//        Backtracking backtracking = new Backtracking();
+//        backtracking.solve(problem);
+//        end = System.nanoTime();
+//
+//        System.out.println("Czas wykonania: "+(end-start)/1000000000.0 + " s");
+//        System.out.println("Liczba iteracji: "+backtracking.getNumOfIterations());
 
 
         System.out.println("\n\n\n");

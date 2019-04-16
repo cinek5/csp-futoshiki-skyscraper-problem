@@ -6,31 +6,77 @@ import java.util.*;
 public abstract class Solver {
    abstract void solve(Problem problem);
 
+//    protected Map<Cell, Set<Integer>> removeNotValidValues(Map<Cell, Set<Integer>> remainingValues, int row, int col, Problem problem) {
+//
+//        Map<Cell, Set<Integer>> whatWasRemoved  = new HashMap<>();
+//        for (Cell cell : remainingValues.keySet())
+//        {
+//            if (cell.row == row || cell.col == col) {
+//                Set<Integer> set = remainingValues.get(cell);
+//                Iterator<Integer> iterator = set.iterator();
+//
+//                Set<Integer> removed = new HashSet<>();
+//                while (iterator.hasNext()) {
+//                    int value = iterator.next();
+//                    if (!problem.isValid(cell.row, cell.col, value)) {
+//                        iterator.remove();
+//                        removed.add(value);
+//                    }
+//                }
+//                if (!removed.isEmpty())
+//                {
+//                    whatWasRemoved.put(cell, removed);
+//                }
+//            }
+//        }
+//        return whatWasRemoved;
+//
+//    }
+
     protected Map<Cell, Set<Integer>> removeNotValidValues(Map<Cell, Set<Integer>> remainingValues, int row, int col, Problem problem) {
 
-        Map<Cell, Set<Integer>> whatWasRemoved  = new HashMap<>();
-        for (Cell cell : remainingValues.keySet())
-        {
-            if (cell.row == row || cell.col == col) {
-                Set<Integer> set = remainingValues.get(cell);
-                Iterator<Integer> iterator = set.iterator();
+        Map<Cell, Set<Integer>> whatWasRemoved = new HashMap<>();
 
-                Set<Integer> removed = new HashSet<>();
-                while (iterator.hasNext()) {
-                    int value = iterator.next();
-                    if (!problem.isValid(cell.row, cell.col, value)) {
-                        iterator.remove();
-                        removed.add(value);
-                    }
-                }
-                if (!removed.isEmpty())
-                {
-                    whatWasRemoved.put(cell, removed);
-                }
+        for (int c = 0; c < problem.getN(); c++) {
+            Cell cell = new Cell(row, c);
+
+            Set<Integer> removed = removeNotValidValuesForOneVariable(remainingValues, cell, problem);
+
+            if (!removed.isEmpty()) {
+                whatWasRemoved.put(cell, removed);
+            }
+
+        }
+
+        for (int r = 0; r < problem.getN(); r++) {
+            Cell cell = new Cell(r, col);
+
+            Set<Integer> removed = removeNotValidValuesForOneVariable(remainingValues, cell, problem);
+
+            if (!removed.isEmpty()) {
+                whatWasRemoved.put(cell, removed);
+            }
+
+        }
+
+
+        return whatWasRemoved;
+    }
+
+    private Set<Integer>  removeNotValidValuesForOneVariable(Map<Cell, Set<Integer>> remainingValues, Cell cell, Problem problem)
+    {
+        Set<Integer> set = remainingValues.get(cell);
+        Iterator<Integer> iterator = set.iterator();
+
+        Set<Integer> removed = new HashSet<>();
+        while (iterator.hasNext()) {
+            int value = iterator.next();
+            if (!problem.isValid(cell.row, cell.col, value)) {
+                iterator.remove();
+                removed.add(value);
             }
         }
-        return whatWasRemoved;
-
+        return removed;
     }
 
     protected void undoRemovingRemainingValues(Map<Cell, Set<Integer>> remainingValues, Map<Cell, Set<Integer>> whatWasRemoved)

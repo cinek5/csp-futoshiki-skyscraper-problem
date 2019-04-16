@@ -6,8 +6,8 @@ import java.util.*;
 public class ForwardChecking extends Solver {
 
     private int numOfIterations = 0;
-    private NextVariableSelectionStrategy nextVariableSelectionStrategy = new  IterativeNextVariableSelectionStrategy();
-   // private NextVariableSelectionStrategy nextVariableSelectionStrategy = new MRVHeuristicsSelectionStrategy();
+    //private NextVariableSelectionStrategy nextVariableSelectionStrategy = new  IterativeNextVariableSelectionStrategy();
+    private NextVariableSelectionStrategy nextVariableSelectionStrategy = new MRVHeuristicsSelectionStrategy();
 
 
 
